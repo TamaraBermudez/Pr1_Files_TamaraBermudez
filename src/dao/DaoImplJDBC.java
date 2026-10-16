@@ -23,6 +23,7 @@ public class DaoImplJDBC implements Dao {
         SEED_EMPLOYEES.add(new Employee(3, "Yessamin", "9999"));
     }
 		
+	
 	@Override
 	public void connect() {
 		// Define connection parameters
