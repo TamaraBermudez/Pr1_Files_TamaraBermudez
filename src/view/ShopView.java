@@ -2,6 +2,7 @@ package view;
 
 import java.awt.EventQueue;
 
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -12,6 +13,7 @@ import utils.Constants;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 
 import java.awt.Font;
 import javax.swing.SwingConstants;
@@ -30,6 +32,8 @@ public class ShopView extends JFrame implements ActionListener, KeyListener{
 	private JButton btnAddProduct;
 	private JButton btnAddStock;
 	private JButton btnRemoveProduct;
+	//Boton nuevo para el writeInventory (q está abajo del get)
+	private JButton btnWriteInventory;
 	
 	
 	
@@ -120,6 +124,18 @@ public class ShopView extends JFrame implements ActionListener, KeyListener{
 		contentPane.add(btnRemoveProduct);
 		// listen button
 		btnRemoveProduct.addActionListener(this);
+		
+		//Para el write inventory, que se cre
+		//Crea el boton 
+		btnWriteInventory = new JButton("10. Exportar inventario");
+		//Como quedara en el documento escrito
+		btnWriteInventory.setHorizontalAlignment(SwingConstants.LEFT);
+		btnWriteInventory.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnWriteInventory.setBounds(99, 240, 236, 40);
+		//Lo pone en la ventana, sin esto no funciona
+		contentPane.add(btnWriteInventory);
+		//q la ventana se enteré al darle al boton, q pase la acción
+		btnWriteInventory.addActionListener(this);
 	}
 
 	@Override
@@ -168,7 +184,10 @@ public class ShopView extends JFrame implements ActionListener, KeyListener{
 		if (e.getSource() == btnRemoveProduct) {
 			this.openProductView(Constants.OPTION_REMOVE_PRODUCT);				
 		}
-		
+		//Este if es para el boton del write.
+		if (e.getSource() == btnWriteInventory) {
+		    this.writeInventory();
+		}
 	}
 	
 	/**
@@ -195,6 +214,18 @@ public class ShopView extends JFrame implements ActionListener, KeyListener{
         // set visibility of dialog
         dialog.setModal(true);
         dialog.setVisible(true);
+	}
+	
+	//Llama al write inventory que creamos en shop 
+	public void writeInventory() {
+	    if (shop.writeInventory()) {
+	    	//Si todo fue bien ejecuta esto
+	        JOptionPane.showMessageDialog(this, "Inventario exportado correctamente");
+	    } else {
+	    	//sino, esto
+	        JOptionPane.showMessageDialog(this, "Error al exportar el inventario",
+	                "Error", JOptionPane.ERROR_MESSAGE);
+	    }
 	}
 	
 	

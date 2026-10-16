@@ -1,6 +1,7 @@
 package main;
 
 import model.Product;
+import dao.DaoImplFile;
 import model.Sale;
 import model.Amount;
 import model.Client;
@@ -17,11 +18,16 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+//Tuve que cambiar el writeSale y el readInventory de privado a publico
+
 public class Shop {
 	private Amount cash = new Amount(100.00);
 //	private Product[] inventory;
 	private ArrayList<Product> inventory;
 	private int numberProducts;
+	
+	private DaoImplFile dao;
+	 
 //	private Sale[] sales;
 	private ArrayList<Sale> sales;
 	private int numberSales;
@@ -31,6 +37,8 @@ public class Shop {
 	public Shop() {
 		inventory = new ArrayList<Product>();
 		sales = new ArrayList<Sale>();
+		//este es el punto 3.a que agregue esto en el constructor el import y el private daoImplFile
+		dao = new DaoImplFile();
 	}
 	
 	
@@ -212,70 +220,17 @@ public class Shop {
 	/**
 	 * read inventory from file
 	 */
-	private void readInventory() {
-		// locate file, path and name
-		File f = new File(System.getProperty("user.dir") + File.separator + "files/inputInventory.txt");
+	
+	//este es el punto 3.b Eliminar FileReader 
+	//cn el metodo dao.getInventory hacemos q devuelva la lista de productos y enseña la lista inventory
+	//cn esto hacemos lo q pide el profe de daoImplFile a getInventory shop solo pide el inventario
+	public void readInventory() {
 		
-		try {			
-			// wrap in proper classes
-			FileReader fr;
-			fr = new FileReader(f);				
-			BufferedReader br = new BufferedReader(fr);
-			
-			// read first line
-			String line = br.readLine();
-			
-			// process and read next line until end of file
-			while (line != null) {
-				// split in sections
-				String[] sections = line.split(";");
-				
-				String name = "";
-				double wholesalerPrice=0.0;
-				int stock = 0;
-				
-				// read each sections
-				for (int i = 0; i < sections.length; i++) {
-					// split data in key(0) and value(1) 
-					String[] data = sections[i].split(":");
-					
-					switch (i) {
-					case 0:
-						// format product name
-						name = data[1];
-						break;
-						
-					case 1:
-						// format price
-						wholesalerPrice = Double.parseDouble(data[1]);
-						break;
-						
-					case 2:
-						// format stock
-						stock = Integer.parseInt(data[1]);
-						break;
-						
-					default:
-						break;
-					}
-				}
-				// add product to inventory
-				addProduct(new Product(name, new Amount(wholesalerPrice), true, stock));
-				
-				// read next line
-				line = br.readLine();
-			}
-			fr.close();
-			br.close();
-			
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		//Aqui tuve que eliminar toda la logica porq asi lo pedía el ejercicio 
+		inventory = new ArrayList<Product>(dao.getInventory());
+		// esto para q lo enseñe desde un comienzo
+		this.showInventory();
+		
 	}
 
 	/**
@@ -469,7 +424,7 @@ public class Shop {
 	/**
 	 * write in file the sales done
 	 */
-	private void writeSales() {
+	public void writeSales() {
 		// define file name based on date
 		LocalDate myObj = LocalDate.now();
 		String fileName = "sales_" + myObj.toString() + ".txt";
@@ -517,6 +472,12 @@ public class Shop {
 			e.printStackTrace();
 		}		
 	}
+	
+	//lo que escribi en DaoImplFile.
+	public boolean writeInventory() {
+	    return dao.writeInventory(inventory);
+	}
+	
 
 	/**
 	 * show total amount all sales

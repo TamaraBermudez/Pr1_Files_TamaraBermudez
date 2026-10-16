@@ -1,6 +1,8 @@
 package view;
 
 import java.awt.EventQueue;
+import dao.Dao;
+import dao.DaoImplJDBC;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -24,21 +26,33 @@ public class LoginView extends JFrame implements ActionListener{
 	private JTextField textFieldPassword;
 	private JButton btnLogin;
 	private int counterErrorLogin;
+	
+	private Dao dao = new DaoImplJDBC();
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					LoginView frame = new LoginView();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+	    EventQueue.invokeLater(new Runnable() {
+	        public void run() {
+	            try {
+
+	                LoginView frame = new LoginView();
+
+	                //conectar con la base de datos
+	                frame.dao.connect();
+
+	                //crear tabla employee e insertar empleados iniciales
+	                frame.dao.seedEmployee();
+
+	                //mostrar ventana
+	                frame.setVisible(true);
+
+	            } catch (Exception e) {
+	                e.printStackTrace();
+	            }
+	        }
+	    });
 	}
 
 	/**

@@ -1,0 +1,2 @@
+nombre: Manzana;precio:10,00€;stock:10;
+nombre: Fresa;precio:5,00€;stock:20;
