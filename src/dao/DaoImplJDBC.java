@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.Product;
+import model.Amount;
 import model.Employee;
 
 public class DaoImplJDBC implements Dao {
@@ -192,9 +193,32 @@ public class DaoImplJDBC implements Dao {
     }
 	
 	// Los metodos de el archivo Dao.java
+	//Escribi el getInventory para: 
 	@Override
 	public List<Product> getInventory() {
-	    return new ArrayList<>();
+		
+		ArrayList<Product> inventory = new ArrayList<>();
+		String query = "SELECT * FROM inventory";
+		try(Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(query)){
+			
+			while(rs.next()) {
+				int id = rs.getInt("id");
+				String name = rs.getString("name");
+				double wholesalerPrice = rs.getDouble("wholesalerPrice");
+				boolean available = rs.getBoolean("available");
+				int stock = rs.getInt("stock");
+				
+				
+				Amount amountWholesaler = new Amount(wholesalerPrice);
+				Product product = new Product(id, name, amountWholesaler, available, stock);
+				inventory.add(product);
+			}
+		}catch (SQLException e) {
+			System.out.println("Error loading from database " + e.getMessage());
+		}
+		
+		return inventory;
+
 	} 
 	
 	@Override
