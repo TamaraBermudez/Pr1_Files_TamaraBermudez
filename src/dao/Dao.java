@@ -24,5 +24,6 @@ public interface Dao {
 	//da true si se pudo hacer, false si hubo algun problema
 	//recibe una lista de product llamada inventory 
 	public boolean writeInventory(List<Product> inventory);
+	
 		
 }
